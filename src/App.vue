@@ -40,7 +40,7 @@
         <div class="card-details" v-for="data in datas" :key="data.id">
           <v-card :loading="loading" class="card" max-width="374">
             <template slot="progress"> </template>
-
+            <!-- <v-title>Top Resturants in US</v-title> -->
             <v-img
               height="250"
               src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
@@ -67,10 +67,11 @@
               <h4>{{ data.country }}</h4>
 
               <div>Address : {{ data.street }}</div>
-              <div>Latitide -- {{ data.lat }}</div>
+              <div>Latitide -- {{ data.latitude }}</div>
+              <div>Longitude -- {{ data.longitude }}</div>
             </v-card-text>
 
-            <v-card-title> Contact No: {{ data.phone }}</v-card-title>
+            <v-card-title> Contact No : {{ data.phone }}</v-card-title>
           </v-card>
         </div>
       </div>
@@ -92,8 +93,8 @@ export default {
       datas: [],
       input: "",
       marker: [],
-      lat: "",
-      long: "",
+      latitude: [],
+      longitude: [],
       city: "",
       country: "",
       street: "",
@@ -102,6 +103,7 @@ export default {
       longIp: "",
       name: "",
       state: "",
+      popup: "",
     };
   },
 
@@ -123,14 +125,15 @@ export default {
         }
       )
       .addTo(this.map);
+    this.popup.openPopup();
   },
   methods: {
     async getLocation() {
       await axios.get(`https://api.openbrewerydb.org/breweries`).then((res) => {
         this.datas = res.data;
         this.city = res.data.city;
-        this.lat = res.data.latitude;
-        this.long = res.data.longitude;
+        this.latitude = res.data.latitude;
+        this.longitude = res.data.longitude;
         this.country = res.data.country;
         this.street = res.data.street;
         this.phone = res.data.phone;
@@ -138,12 +141,11 @@ export default {
         this.state = res.data.state;
         console.log(this.datas);
         console.log(this.city);
-        console.log(this.lat);
-        console.log(this.long);
+        console.log(this.latitude);
+        console.log(this.longitude);
       });
-      leaflet.marker([this.lat, this.long]).addTo(this.map);
-      this.map.setView([this.lat, this.long], 13);
-      this.hello = true;
+      leaflet.marker([this.latitude, this.longitude]).addTo(this.map);
+      this.map.setView([this.latitude, this.longitude], 13);
     },
     async getIp() {
       await axios
@@ -161,6 +163,7 @@ export default {
         });
       leaflet.marker([this.latIp, this.longIp]).addTo(this.map);
       this.map.setView([this.latIp, this.longIp], 13);
+      this.popup = marker.bindPopup("<b>Hello world!</b><br />I am a popup.");
     },
   },
 };
