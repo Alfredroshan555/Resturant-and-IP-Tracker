@@ -52,7 +52,7 @@
               <v-row align="center" class="mx-0">
                 <v-rating
                   :value="4.5"
-                  color="amber"
+                  color="purple"
                   dense
                   half-increments
                   readonly
@@ -106,7 +106,7 @@ export default {
       popup: "",
     };
   },
-
+  //setting up map
   mounted() {
     this.map = leaflet.map("map").setView([10.5276, 76.2144], 9);
     leaflet.Control.geocoder().addTo(this.map);
@@ -128,6 +128,7 @@ export default {
     this.popup.openPopup();
   },
   methods: {
+    //getting resturant data from api
     async getLocation() {
       await axios.get(`https://api.openbrewerydb.org/breweries`).then((res) => {
         this.datas = res.data;
@@ -144,9 +145,14 @@ export default {
         console.log(this.latitude);
         console.log(this.longitude);
       });
-      leaflet.marker([this.latitude, this.longitude]).addTo(this.map);
+      leaflet
+        .marker([this.latitude, this.longitude])
+        .addTo(this.map)
+        .bindPopup("A pretty CSS3 popup.<br> Easily customizable.")
+        .openPopup();
       this.map.setView([this.latitude, this.longitude], 13);
     },
+    //getting ip info from api
     async getIp() {
       await axios
         .get(
@@ -161,9 +167,12 @@ export default {
           console.log(this.latIp);
           console.log(this.longIp);
         });
-      leaflet.marker([this.latIp, this.longIp]).addTo(this.map);
+      leaflet
+        .marker([this.latIp, this.longIp])
+        .addTo(this.map)
+        .bindPopup("A pretty CSS3 popup.<br> Easily customizable.")
+        .openPopup();
       this.map.setView([this.latIp, this.longIp], 13);
-      this.popup = marker.bindPopup("<b>Hello world!</b><br />I am a popup.");
     },
   },
 };
