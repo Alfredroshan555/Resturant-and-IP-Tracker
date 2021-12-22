@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <div>
+      <h1>hello</h1>
       <v-app-bar color="deep-purple accent-4" dense dark>
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
